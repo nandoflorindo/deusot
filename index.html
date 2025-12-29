@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hunted List - Titan</title>
+    <title>Hunted List - Server Name</title>
     <style>
-        /* Estilo Tibia-Like */
+        /* Estilo Geral inspirado no Tibia */
         body {
             background-color: #060606;
             color: #D1C4A8;
@@ -22,32 +22,70 @@
             max-width: 1200px;
             background-color: #262626;
             border: 2px solid #3c3c3c;
-            padding: 20px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+            padding: 25px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.8);
         }
 
         h1 { 
             color: #F0E2C1; 
             text-shadow: 2px 2px #000; 
-            margin-bottom: 25px;
-            border-bottom: 1px solid #5A4A33;
-            padding-bottom: 10px;
-            width: 100%;
+            margin-bottom: 5px;
             text-align: center;
         }
 
-        .search-box { margin-bottom: 20px; }
+        .subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 12px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Seção de Solicitação */
+        .request-section {
+            background-color: #1a1a1a;
+            border: 1px solid #3c3c3c;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-solicitar {
+            background: linear-gradient(to bottom, #7a0000, #4a0000);
+            color: #f0e2c1;
+            padding: 12px 30px;
+            text-decoration: none;
+            border: 2px solid #DAA520;
+            font-weight: bold;
+            font-size: 13px;
+            display: inline-block;
+            transition: 0.2s;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .btn-solicitar:hover {
+            background: linear-gradient(to bottom, #a00000, #7a0000);
+            border-color: #fff;
+            box-shadow: 0 0 10px rgba(218, 165, 32, 0.4);
+        }
+
+        /* Busca */
+        .search-box { margin-bottom: 15px; }
         input#search {
             width: 100%;
             padding: 12px;
-            background-color: #1a1a1a;
+            background-color: #0c0c0c;
             border: 1px solid #5A4A33;
             color: #FFF;
             box-sizing: border-box;
             outline: none;
+            font-size: 14px;
         }
         input#search:focus { border-color: #DAA520; }
 
+        /* Tabela */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -62,7 +100,6 @@
             border: 1px solid #262626;
             font-size: 11px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         td {
@@ -74,7 +111,7 @@
         tr:nth-child(even) { background-color: #313131; }
         tr:hover { background-color: #444; }
 
-        /* Status Badges */
+        /* Status Styles */
         .status-badge {
             padding: 4px 10px;
             border-radius: 2px;
@@ -87,17 +124,32 @@
         .status-pago { background-color: #004400; color: #b3ffb3; border: 1px solid #007700; }
         .status-analise { background-color: #634b00; color: #fff3cd; border: 1px solid #856404; }
 
+        .pay-date { display: block; font-size: 10px; color: #aaa; margin-top: 4px; font-weight: normal; text-transform: none; }
         .nick-cell { color: #FFF; font-weight: bold; font-size: 14px; }
         .lvl-cell { font-family: 'Courier New', monospace; font-weight: bold; color: #DAA520; }
+        
+        @media (max-width: 600px) {
+            .container { padding: 10px; }
+            th, td { padding: 8px; font-size: 11px; }
+            .nick-cell { font-size: 12px; }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Hunted List</h1>
+        <h1>OFFICIAL HUNTED LIST</h1>
+        <div class="subtitle">Justiça e Ordem no Servidor</div>
+
+        <div class="request-section">
+            <p style="margin-top: 0; font-size: 14px;">Deseja reportar uma infração ou solicitar inclusão?</p>
+            <a href="https://forms.gle/RPpAQpWfJ91hDvZ97" target="_blank" class="btn-solicitar">
+                ⚔️ Enviar Denúncia com Print
+            </a>
+        </div>
 
         <div class="search-box">
-            <input type="text" id="search" placeholder="Buscar por Nick, Level ou Motivo...">
+            <input type="text" id="search" placeholder="Filtrar por Nick, Level ou Motivo...">
         </div>
 
         <table id="huntedTable">
@@ -106,45 +158,58 @@
                     <th>Nick</th>
                     <th>Level</th>
                     <th>Motivo</th>
-                    <th>Data do Hunted</th>
-                    <th>Prazo Hunted</th>
-                    <th>Status</th>
+                    <th>Data Início</th>
+                    <th>Prazo</th>
+                    <th>Status / Pagamento</th>
                 </tr>
             </thead>
             <tbody id="tableBody">
-                </tbody>
+            </tbody>
         </table>
     </div>
 
     <script>
         // --- BASE DE DADOS: ADICIONE NOVOS PLAYERS AQUI ---
+        // Padrão: nick, level, motivo, data, prazo, status (Hunted, Pago ou Analise), dataPagamento (vazio se não pago)
         const huntedPlayers = [
             { 
                 nick: "Aelis", 
                 level: 1000, 
-                motivo: "Ofensa a Liderança - KS em Membros", 
+                motivo: "Ofensa Liderança e KS em membros", 
                 data: "28/11/2025", 
-                prazo: "Permanente", 
-                status: "Hunted" 
+                prazo: "Indeterminado", 
+                status: "Hunted",
+                dataPagamento: ""
             },
             { 
                 nick: "The King Otto", 
                 level: 800, 
-                motivo: "KS constante em Ghastly Dragons", 
-                data: "18/05/2024", 
-                prazo: "30 Dias", 
-                status: "Pago" 
-            },
-
+                motivo: "KS em membros e Trolla Boss", 
+                data: "29/12/2025", 
+                prazo: "7 dias", 
+                status: "Hunted",
+                dataPagamento: ""
+            }
         ];
 
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = data.map(p => {
-                // Define a cor do status baseado no que você digitar
                 let statusClass = "status-hunted";
-                if(p.status.toLowerCase() === 'pago') statusClass = "status-pago";
-                if(p.status.toLowerCase() === 'análise' || p.status.toLowerCase() === 'analise') statusClass = "status-analise";
+                let statusText = p.status;
+                let pgtoInfo = "";
+
+                if(p.status.toLowerCase() === 'pago') {
+                    statusClass = "status-pago";
+                    if(p.dataPagamento) {
+                        pgtoInfo = `<span class="pay-date">Pago em: ${p.dataPagamento}</span>`;
+                    }
+                }
+                
+                if(p.status.toLowerCase() === 'analise' || p.status.toLowerCase() === 'análise') {
+                    statusClass = "status-analise";
+                    statusText = "Em Análise";
+                }
 
                 return `
                 <tr>
@@ -153,12 +218,14 @@
                     <td>${p.motivo}</td>
                     <td>${p.data}</td>
                     <td>${p.prazo}</td>
-                    <td><span class="status-badge ${statusClass}">${p.status}</span></td>
+                    <td>
+                        <span class="status-badge ${statusClass}">${statusText}</span>
+                        ${pgtoInfo}
+                    </td>
                 </tr>
             `}).join('');
         }
 
-        // Inicia a tabela
         renderTable(huntedPlayers);
 
         // Sistema de busca
