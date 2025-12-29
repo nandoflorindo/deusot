@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hunted List - Titan</title>
+    <style>
+        /* Estilo Tibia-Like */
+        body {
+            background-color: #060606;
+            color: #D1C4A8;
+            font-family: Verdana, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            background-color: #262626;
+            border: 2px solid #3c3c3c;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        h1 { 
+            color: #F0E2C1; 
+            text-shadow: 2px 2px #000; 
+            margin-bottom: 25px;
+            border-bottom: 1px solid #5A4A33;
+            padding-bottom: 10px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .search-box { margin-bottom: 20px; }
+        input#search {
+            width: 100%;
+            padding: 12px;
+            background-color: #1a1a1a;
+            border: 1px solid #5A4A33;
+            color: #FFF;
+            box-sizing: border-box;
+            outline: none;
+        }
+        input#search:focus { border-color: #DAA520; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #383838;
+        }
+
+        th {
+            background-color: #4A4A4A;
+            color: #DAA520;
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #262626;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        td {
+            padding: 12px;
+            border: 1px solid #262626;
+            font-size: 13px;
+        }
+
+        tr:nth-child(even) { background-color: #313131; }
+        tr:hover { background-color: #444; }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 2px;
+            font-weight: bold;
+            font-size: 10px;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+        .status-hunted { background-color: #610000; color: #ffb3b3; border: 1px solid #910000; }
+        .status-pago { background-color: #004400; color: #b3ffb3; border: 1px solid #007700; }
+        .status-analise { background-color: #634b00; color: #fff3cd; border: 1px solid #856404; }
+
+        .nick-cell { color: #FFF; font-weight: bold; font-size: 14px; }
+        .lvl-cell { font-family: 'Courier New', monospace; font-weight: bold; color: #DAA520; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Hunted List</h1>
+
+        <div class="search-box">
+            <input type="text" id="search" placeholder="Buscar por Nick, Level ou Motivo...">
+        </div>
+
+        <table id="huntedTable">
+            <thead>
+                <tr>
+                    <th>Nick</th>
+                    <th>Level</th>
+                    <th>Motivo</th>
+                    <th>Data do Hunted</th>
+                    <th>Prazo Hunted</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                </tbody>
+        </table>
+    </div>
+
+    <script>
+        // --- BASE DE DADOS: ADICIONE NOVOS PLAYERS AQUI ---
+        const huntedPlayers = [
+            { 
+                nick: "Aelis", 
+                level: 1000, 
+                motivo: "Ofensa a Liderança - KS em Membros", 
+                data: "28/11/2025", 
+                prazo: "Permanente", 
+                status: "Hunted" 
+            },
+            { 
+                nick: "The King Otto", 
+                level: 800, 
+                motivo: "KS constante em Ghastly Dragons", 
+                data: "18/05/2024", 
+                prazo: "30 Dias", 
+                status: "Pago" 
+            },
+
+        ];
+
+        function renderTable(data) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = data.map(p => {
+                // Define a cor do status baseado no que você digitar
+                let statusClass = "status-hunted";
+                if(p.status.toLowerCase() === 'pago') statusClass = "status-pago";
+                if(p.status.toLowerCase() === 'análise' || p.status.toLowerCase() === 'analise') statusClass = "status-analise";
+
+                return `
+                <tr>
+                    <td class="nick-cell">${p.nick}</td>
+                    <td class="lvl-cell">${p.level}</td>
+                    <td>${p.motivo}</td>
+                    <td>${p.data}</td>
+                    <td>${p.prazo}</td>
+                    <td><span class="status-badge ${statusClass}">${p.status}</span></td>
+                </tr>
+            `}).join('');
+        }
+
+        // Inicia a tabela
+        renderTable(huntedPlayers);
+
+        // Sistema de busca
+        document.getElementById('search').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = huntedPlayers.filter(p => 
+                p.nick.toLowerCase().includes(term) || 
+                p.motivo.toLowerCase().includes(term) ||
+                p.level.toString().includes(term)
+            );
+            renderTable(filtered);
+        });
+    </script>
+</body>
+</html>
