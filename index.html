@@ -22,19 +22,20 @@
 
         h1 { color: #F0E2C1; text-shadow: 2px 2px #000; text-align: center; margin-bottom: 5px; font-size: 1.8rem; }
         
-        /* Centralizando os Painéis de Estatísticas */
+        /* Painel de Estatísticas Centralizado */
         .stats-panel {
             display: flex; 
-            justify-content: center; /* ISSO CENTRALIZA OS CARDS */
+            justify-content: center; 
             gap: 15px; 
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
         .stat-card {
             background: #1a1a1a; border: 1px solid #5A4A33; padding: 10px;
-            text-align: center; flex: 0 1 150px; /* Ajustado para não esticar demais */
+            text-align: center; flex: 0 1 200px;
         }
         .stat-value { display: block; font-size: 22px; font-weight: bold; color: #DAA520; }
-        .stat-label { font-size: 9px; text-transform: uppercase; color: #888; letter-spacing: 1px; }
+        .stat-label { font-size: 10px; text-transform: uppercase; color: #888; letter-spacing: 1px; font-weight: bold; }
 
         /* Legenda de Vocações */
         .legend-container {
@@ -67,6 +68,7 @@
         .dot.ms { background-color: #ff44ff; }
         .dot.ed { background-color: #44ffff; }
 
+        /* Filtros */
         .filter-group {
             display: flex; justify-content: center; gap: 8px; margin-bottom: 15px; flex-wrap: wrap;
         }
@@ -94,6 +96,7 @@
             border: 1px solid #5A4A33; color: #FFF; box-sizing: border-box; margin-bottom: 15px; outline: none;
         }
 
+        /* Tabela e Estilos de Células */
         .table-wrapper { overflow-x: auto; width: 100%; }
         table { width: 100%; border-collapse: collapse; background-color: #383838; min-width: 700px; }
         th { background-color: #4A4A4A; color: #DAA520; padding: 12px; text-align: left; border: 1px solid #262626; font-size: 11px; text-transform: uppercase; }
@@ -107,13 +110,56 @@
         .status-hunted { background-color: #610000; color: #ffb3b3; }
         .status-pago { background-color: #004400; color: #b3ffb3; }
         
-        .nick-display { font-weight: bold; }
+        .pay-date { display: block; font-size: 10px; color: #aaa; margin-top: 4px; font-weight: normal; text-transform: none; }
+        .nick-display { font-weight: bold; display: flex; align-items: center; gap: 8px; }
         .lvl-cell { font-family: monospace; font-weight: bold; color: #DAA520; }
 
-        @media (max-width: 600px) {
+        /* Botão Copiar Nick */
+        .copy-btn {
+            cursor: pointer;
+            background: #444;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 3px 6px;
+            font-size: 9px;
+            border-radius: 3px;
+            text-transform: uppercase;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .copy-btn:hover { background: #DAA520; color: #000; }
+
+        /* Melhoria: Layout de Cards para Mobile */
+        @media (max-width: 768px) {
             h1 { font-size: 1.4rem; }
-            .stat-value { font-size: 18px; }
-            td, th { padding: 8px; font-size: 11px; }
+            .table-wrapper { overflow: visible; }
+            table, thead, tbody, th, td, tr { display: block; }
+            thead { display: none; }
+            tr {
+                margin-bottom: 15px;
+                border: 1px solid #5A4A33;
+                background-color: #1a1a1a !important;
+            }
+            td {
+                text-align: right;
+                padding-left: 50%;
+                position: relative;
+                border: none;
+                border-bottom: 1px solid #333;
+                min-height: 35px;
+            }
+            td::before {
+                content: attr(data-label);
+                position: absolute;
+                left: 10px;
+                width: 45%;
+                text-align: left;
+                font-weight: bold;
+                color: #DAA520;
+                text-transform: uppercase;
+                font-size: 10px;
+            }
+            .nick-display { justify-content: flex-end; }
         }
     </style>
 </head>
@@ -174,20 +220,28 @@
     </div>
 
     <script>
+        // --- BASE DE DADOS ---
         const huntedPlayers = [
             { 
                 nick: "Aelis", voc: "ms", level: 1000, 
                 motivo: "Ofensa Liderança", data: "28/11/2025", 
-                prazo: "Indeterminado", status: "Hunted" 
+                prazo: "Indeterminado", status: "Hunted", dataPagamento: ""
             },
             { 
                 nick: "The King Otto", voc: "ms", level: 800, 
                 motivo: "KS em membros", data: "29/12/2025", 
-                prazo: "7 Dias", status: "Hunted" 
+                prazo: "Pago", status: "Hunted", dataPagamento: ""
             }
         ];
 
         let currentFilter = '';
+
+        // Função para copiar o Nick
+        function copiarNick(nick) {
+            navigator.clipboard.writeText(nick).then(() => {
+                alert("Nick copiado: " + nick);
+            });
+        }
 
         function renderTable(data) {
             const tbody = document.getElementById('tableBody');
@@ -201,19 +255,28 @@
             });
 
             tbody.innerHTML = filteredData.map(p => {
-                const statusClass = p.status.toLowerCase() === 'pago' ? "status-pago" : "status-hunted";
+                const isPago = p.status.toLowerCase() === 'pago';
+                const statusClass = isPago ? "status-pago" : "status-hunted";
+                const pgtoInfo = (isPago && p.dataPagamento) ? `<span class="pay-date">Pago em: ${p.dataPagamento}</span>` : "";
+
                 return `
                 <tr>
-                    <td class="nick-display ${p.voc.toLowerCase()}">${p.nick}</td>
-                    <td class="${p.voc.toLowerCase()}" style="font-weight: bold;">${p.voc.toUpperCase()}</td>
-                    <td class="lvl-cell">${p.level}</td>
-                    <td>${p.motivo}</td>
-                    <td>${p.data}</td>
-                    <td>${p.prazo}</td>
-                    <td><span class="status-badge ${statusClass}">${p.status}</span></td>
+                    <td data-label="Nick" class="nick-display ${p.voc.toLowerCase()}">
+                        ${p.nick} <button class="copy-btn" onclick="copiarNick('${p.nick}')">COPIAR</button>
+                    </td>
+                    <td data-label="Voc" class="${p.voc.toLowerCase()}" style="font-weight: bold;">${p.voc.toUpperCase()}</td>
+                    <td data-label="Lvl" class="lvl-cell">${p.level}</td>
+                    <td data-label="Motivo">${p.motivo}</td>
+                    <td data-label="Início">${p.data}</td>
+                    <td data-label="Prazo">${p.prazo}</td>
+                    <td data-label="Status">
+                        <span class="status-badge ${statusClass}">${p.status}</span>
+                        ${pgtoInfo}
+                    </td>
                 </tr>
             `}).join('');
 
+            // Atualiza os contadores
             document.getElementById('countHunted').innerText = data.filter(p => p.status.toLowerCase() === 'hunted').length;
             document.getElementById('countPago').innerText = data.filter(p => p.status.toLowerCase() === 'pago').length;
         }
@@ -228,6 +291,7 @@
 
         document.getElementById('search').addEventListener('input', () => renderTable(huntedPlayers));
 
+        // Inicialização
         renderTable(huntedPlayers);
     </script>
 </body>
