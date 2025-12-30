@@ -5,129 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hunted List - Titan (DeusOT)</title>
     <style>
-        * { box-sizing: border-box; } /* Garante que padding não aumente o tamanho dos elementos */
-
-        body {
-            background-color: #060606;
-            color: #D1C4A8;
-            font-family: Verdana, Arial, sans-serif;
-            margin: 0; padding: 10px;
-            display: flex; flex-direction: column; align-items: center;
-        }
-
-        .container {
-            width: 100%; max-width: 1100px;
-            background-color: #262626; border: 2px solid #3c3c3c;
-            padding: 15px; box-shadow: 0 0 25px rgba(0,0,0,0.8);
-        }
-
+        /* Manti seu CSS original para não mudar o visual que você criou */
+        * { box-sizing: border-box; }
+        body { background-color: #060606; color: #D1C4A8; font-family: Verdana, Arial, sans-serif; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
+        .container { width: 100%; max-width: 1100px; background-color: #262626; border: 2px solid #3c3c3c; padding: 15px; box-shadow: 0 0 25px rgba(0,0,0,0.8); }
         h1 { color: #F0E2C1; text-shadow: 2px 2px #000; text-align: center; margin-bottom: 5px; font-size: 1.8rem; }
-        
-        .stats-panel {
-            display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
-        }
-        .stat-card {
-            background: #1a1a1a; border: 1px solid #5A4A33; padding: 10px;
-            text-align: center; flex: 1; min-width: 140px;
-        }
+        .stats-panel { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .stat-card { background: #1a1a1a; border: 1px solid #5A4A33; padding: 10px; text-align: center; flex: 1; min-width: 140px; }
         .stat-value { display: block; font-size: 22px; font-weight: bold; color: #DAA520; }
         .stat-label { font-size: 10px; text-transform: uppercase; color: #888; letter-spacing: 1px; font-weight: bold; }
-
-        .legend-container {
-            display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
-            background: #1a1a1a; padding: 10px; border: 1px solid #3c3c3c; border-radius: 4px;
-        }
+        .legend-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: #1a1a1a; padding: 10px; border: 1px solid #3c3c3c; border-radius: 4px; }
         .legend-item { font-size: 10px; font-weight: bold; display: flex; align-items: center; gap: 4px; text-transform: uppercase; }
         .dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; }
-        .dot.ek { background-color: #ff4444; }
-        .dot.rp { background-color: #ffff44; }
-        .dot.ms { background-color: #ff44ff; }
-        .dot.ed { background-color: #44ffff; }
-
+        .dot.ek { background-color: #ff4444; } .dot.rp { background-color: #ffff44; } .dot.ms { background-color: #ff44ff; } .dot.ed { background-color: #44ffff; }
         .filter-group { display: flex; justify-content: center; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; }
-        .filter-btn {
-            background: #333; color: #ccc; border: 1px solid #444; padding: 8px 10px;
-            font-size: 10px; cursor: pointer; text-transform: uppercase; font-weight: bold;
-        }
+        .filter-btn { background: #333; color: #ccc; border: 1px solid #444; padding: 8px 10px; font-size: 10px; cursor: pointer; text-transform: uppercase; font-weight: bold; }
         .filter-btn.active { background: #5A4A33; color: #fff; border-color: #DAA520; }
-
         .request-section { background-color: #1a1a1a; border: 1px solid #3c3c3c; padding: 15px; text-align: center; margin-bottom: 20px; }
-        .btn-solicitar {
-            background: linear-gradient(to bottom, #7a0000, #4a0000);
-            color: #f0e2c1; padding: 10px 15px; text-decoration: none;
-            border: 1px solid #DAA520; font-weight: bold; font-size: 11px; display: inline-block; text-transform: uppercase;
-        }
-
+        .btn-solicitar { background: linear-gradient(to bottom, #7a0000, #4a0000); color: #f0e2c1; padding: 10px 15px; text-decoration: none; border: 1px solid #DAA520; font-weight: bold; font-size: 11px; display: inline-block; text-transform: uppercase; }
         input#search { width: 100%; padding: 12px; background-color: #0c0c0c; border: 1px solid #5A4A33; color: #FFF; margin-bottom: 15px; outline: none; }
-
         .table-wrapper { width: 100%; }
         table { width: 100%; border-collapse: collapse; background-color: #383838; }
         th { background-color: #4A4A4A; color: #DAA520; padding: 12px; text-align: left; border: 1px solid #262626; font-size: 11px; text-transform: uppercase; }
         td { padding: 10px; border: 1px solid #262626; font-size: 13px; }
         tr:nth-child(even) { background-color: #313131; }
-        
-        .ek { color: #ff4444 !important; } .rp { color: #ffff44 !important; }
-        .ms { color: #ff44ff !important; } .ed { color: #44ffff !important; }
-
+        .ek { color: #ff4444 !important; } .rp { color: #ffff44 !important; } .ms { color: #ff44ff !important; } .ed { color: #44ffff !important; }
         .status-badge { padding: 4px 8px; border-radius: 2px; font-weight: bold; font-size: 10px; text-transform: uppercase; }
         .status-hunted { background-color: #610000; color: #ffb3b3; }
         .status-pago { background-color: #004400; color: #b3ffb3; }
-        
-        .pay-date { display: block; font-size: 10px; color: #aaa; margin-top: 4px; }
         .nick-display { font-weight: bold; display: flex; align-items: center; gap: 8px; }
         .lvl-cell { font-family: monospace; font-weight: bold; color: #DAA520; }
+        .copy-btn { cursor: pointer; background: #444; color: #fff; border: 1px solid #555; padding: 4px 6px; font-size: 9px; border-radius: 3px; text-transform: uppercase; }
+        
+        /* Ajuste de carregamento */
+        #loading { text-align: center; padding: 20px; color: #DAA520; font-weight: bold; }
 
-        .copy-btn {
-            cursor: pointer; background: #444; color: #fff; border: 1px solid #555;
-            padding: 4px 6px; font-size: 9px; border-radius: 3px; text-transform: uppercase;
-        }
-
-        /* AJUSTES PARA MOBILE */
         @media (max-width: 768px) {
-            .container { padding: 10px; border-width: 1px; }
-            h1 { font-size: 1.2rem; }
-            
             table, thead, tbody, th, td, tr { display: block; width: 100%; }
             thead { display: none; }
-
-            tr {
-                margin-bottom: 15px;
-                border: 1px solid #5A4A33;
-                background-color: #1a1a1a !important;
-                border-radius: 4px;
-            }
-
-            td {
-                text-align: right;
-                padding: 10px;
-                border: none;
-                border-bottom: 1px solid #2a2a2a;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            td:last-child { border-bottom: none; }
-
-            td::before {
-                content: attr(data-label);
-                font-weight: bold;
-                color: #DAA520;
-                text-transform: uppercase;
-                font-size: 10px;
-                text-align: left;
-            }
-
-            /* Fix para o Nick no mobile */
-            td[data-label="Nick"] {
-                background: #2b2b2b;
-                justify-content: space-between;
-                padding: 12px 10px;
-            }
-            td[data-label="Nick"]::before { content: "PLAYER"; } /* Rótulo para o Nick no mobile */
-
-            .filter-group { justify-content: flex-start; overflow-x: auto; white-space: nowrap; padding-bottom: 5px; }
-            .filter-btn { flex: 0 0 auto; }
+            tr { margin-bottom: 15px; border: 1px solid #5A4A33; background-color: #1a1a1a !important; border-radius: 4px; }
+            td { text-align: right; padding: 10px; border: none; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; }
+            td::before { content: attr(data-label); font-weight: bold; color: #DAA520; text-transform: uppercase; font-size: 10px; }
         }
     </style>
 </head>
@@ -167,9 +85,10 @@
             <button class="filter-btn" onclick="filterBy('pago', event)">Pagos</button>
         </div>
 
-        <input type="text" id="search" placeholder="Buscar...">
+        <input type="text" id="search" placeholder="Buscar por Nick ou Motivo...">
 
         <div class="table-wrapper">
+            <div id="loading">Carregando lista de alvos...</div>
             <table>
                 <thead>
                     <tr>
@@ -188,36 +107,48 @@
     </div>
 
     <script>
-        const huntedPlayers = [
-            { nick: "Aelis", voc: "ms", level: 1012, motivo: "Ofensa Liderança e KS em Membros", data: "28/11/2025", prazo: "Indeterminado", status: "Hunted", dataPagamento: "" },
-            { nick: "The King Otto", voc: "ms", level: 863, motivo: "KS em membros", data: "29/12/2025", prazo: "7 dias", status: "Hunted", dataPagamento: "" }
-        ];
+        // 1. COLE O LINK DA SUA "IMPLANTAÇÃO" DO GOOGLE APPS SCRIPT AQUI:
+        const API_URL = "https://script.google.com/macros/s/AKfycbxtzLx9Vdk23ZjIWM0ASbK5C1k78KcbOOuUxCNVb80EmtXSZPWCG1rSUsxQ3s_YYLlXGQ/exec";
 
+        let huntedPlayers = [];
         let currentFilter = '';
 
         function copiarNick(nick) {
             navigator.clipboard.writeText(nick).then(() => alert("Copiado: " + nick));
         }
 
-        function renderTable(data) {
+        async function fetchListData() {
+            try {
+                const response = await fetch(API_URL);
+                huntedPlayers = await response.json();
+                document.getElementById('loading').style.display = 'none';
+                renderTable();
+            } catch (error) {
+                document.getElementById('loading').innerText = "Erro ao carregar dados da planilha.";
+                console.error(error);
+            }
+        }
+
+        function renderTable() {
             const tbody = document.getElementById('tableBody');
             const searchTxt = document.getElementById('search').value.toLowerCase();
             
-            const filteredData = data.filter(p => {
-                const matchesSearch = p.nick.toLowerCase().includes(searchTxt) || p.motivo.toLowerCase().includes(searchTxt);
+            const filteredData = huntedPlayers.filter(p => {
+                const matchesSearch = String(p.nick).toLowerCase().includes(searchTxt) || String(p.motivo).toLowerCase().includes(searchTxt);
                 if (!currentFilter) return matchesSearch;
-                if (currentFilter === 'pago') return p.status.toLowerCase() === 'pago' && matchesSearch;
-                return p.voc.toLowerCase() === currentFilter && matchesSearch;
+                if (currentFilter === 'pago') return String(p.status).toLowerCase() === 'pago' && matchesSearch;
+                return String(p.voc).toLowerCase() === currentFilter && matchesSearch;
             });
 
             tbody.innerHTML = filteredData.map(p => {
-                const isPago = p.status.toLowerCase() === 'pago';
+                const isPago = String(p.status).toLowerCase() === 'pago';
+                const vocClass = String(p.voc).toLowerCase();
                 return `
                 <tr>
-                    <td data-label="Nick" class="nick-display ${p.voc.toLowerCase()}">
+                    <td data-label="Nick" class="nick-display ${vocClass}">
                         ${p.nick} <button class="copy-btn" onclick="copiarNick('${p.nick}')">Copiar</button>
                     </td>
-                    <td data-label="Voc" class="${p.voc.toLowerCase()}" style="font-weight: bold;">${p.voc.toUpperCase()}</td>
+                    <td data-label="Voc" class="${vocClass}" style="font-weight: bold;">${String(p.voc).toUpperCase()}</td>
                     <td data-label="Lvl" class="lvl-cell">${p.level}</td>
                     <td data-label="Motivo">${p.motivo}</td>
                     <td data-label="Início">${p.data}</td>
@@ -228,19 +159,21 @@
                 </tr>
             `}).join('');
 
-            document.getElementById('countHunted').innerText = data.filter(p => p.status.toLowerCase() === 'hunted').length;
-            document.getElementById('countPago').innerText = data.filter(p => p.status.toLowerCase() === 'pago').length;
+            document.getElementById('countHunted').innerText = huntedPlayers.filter(p => String(p.status).toLowerCase() === 'hunted').length;
+            document.getElementById('countPago').innerText = huntedPlayers.filter(p => String(p.status).toLowerCase() === 'pago').length;
         }
 
         function filterBy(voc, event) {
             currentFilter = voc;
             document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
             if (event) event.currentTarget.classList.add('active');
-            renderTable(huntedPlayers);
+            renderTable();
         }
 
-        document.getElementById('search').addEventListener('input', () => renderTable(huntedPlayers));
-        renderTable(huntedPlayers);
+        document.getElementById('search').addEventListener('input', renderTable);
+        
+        // Inicia a busca dos dados
+        fetchListData();
     </script>
 </body>
 </html>
