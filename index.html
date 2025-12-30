@@ -107,11 +107,28 @@
     </div>
 
     <script>
-        // 1. COLE O LINK DA SUA "IMPLANTAÇÃO" DO GOOGLE APPS SCRIPT AQUI:
         const API_URL = "https://script.google.com/macros/s/AKfycbxtzLx9Vdk23ZjIWM0ASbK5C1k78KcbOOuUxCNVb80EmtXSZPWCG1rSUsxQ3s_YYLlXGQ/exec";
 
         let huntedPlayers = [];
         let currentFilter = '';
+
+        // FUNÇÃO ADICIONADA: Formata a data ISO para o padrão brasileiro DD/MM/AAAA
+        function formatarData(dataString) {
+            if (!dataString) return "";
+            try {
+                const data = new Date(dataString);
+                // Verifica se é uma data válida
+                if (isNaN(data.getTime())) return dataString; 
+                
+                // Formata como DD/MM/YYYY. Usamos UTC para evitar que o fuso horário mude o dia (ex: 28 vira 27)
+                const dia = String(data.getUTCDate()).padStart(2, '0');
+                const mes = String(data.getUTCMonth() + 1).padStart(2, '0');
+                const ano = data.getUTCFullYear();
+                return `${dia}/${mes}/${ano}`;
+            } catch (e) {
+                return dataString;
+            }
+        }
 
         function copiarNick(nick) {
             navigator.clipboard.writeText(nick).then(() => alert("Copiado: " + nick));
@@ -143,6 +160,9 @@
             tbody.innerHTML = filteredData.map(p => {
                 const isPago = String(p.status).toLowerCase() === 'pago';
                 const vocClass = String(p.voc).toLowerCase();
+                // APLICAÇÃO DA FORMATAÇÃO AQUI NA VARIÁVEL p.data
+                const dataExibicao = formatarData(p.data);
+
                 return `
                 <tr>
                     <td data-label="Nick" class="nick-display ${vocClass}">
@@ -151,7 +171,7 @@
                     <td data-label="Voc" class="${vocClass}" style="font-weight: bold;">${String(p.voc).toUpperCase()}</td>
                     <td data-label="Lvl" class="lvl-cell">${p.level}</td>
                     <td data-label="Motivo">${p.motivo}</td>
-                    <td data-label="Início">${p.data}</td>
+                    <td data-label="Início">${dataExibicao}</td>
                     <td data-label="Prazo">${p.prazo}</td>
                     <td data-label="Status">
                         <span class="status-badge ${isPago ? 'status-pago' : 'status-hunted'}">${p.status}</span>
@@ -172,7 +192,6 @@
 
         document.getElementById('search').addEventListener('input', renderTable);
         
-        // Inicia a busca dos dados
         fetchListData();
     </script>
 </body>
