@@ -3,196 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hunted List - Titan (DeusOT)</title>
+    <title>TITAN HUNTED LIST</title>
     <style>
-        /* Manti seu CSS original para não mudar o visual que você criou */
+        /* CSS ESTILO TIBIA / DEUSOT */
         * { box-sizing: border-box; }
-        body { background-color: #060606; color: #D1C4A8; font-family: Verdana, Arial, sans-serif; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; }
-        .container { width: 100%; max-width: 1100px; background-color: #262626; border: 2px solid #3c3c3c; padding: 15px; box-shadow: 0 0 25px rgba(0,0,0,0.8); }
-        h1 { color: #F0E2C1; text-shadow: 2px 2px #000; text-align: center; margin-bottom: 5px; font-size: 1.8rem; }
-        .stats-panel { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .stat-card { background: #1a1a1a; border: 1px solid #5A4A33; padding: 10px; text-align: center; flex: 1; min-width: 140px; }
-        .stat-value { display: block; font-size: 22px; font-weight: bold; color: #DAA520; }
-        .stat-label { font-size: 10px; text-transform: uppercase; color: #888; letter-spacing: 1px; font-weight: bold; }
-        .legend-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; background: #1a1a1a; padding: 10px; border: 1px solid #3c3c3c; border-radius: 4px; }
-        .legend-item { font-size: 10px; font-weight: bold; display: flex; align-items: center; gap: 4px; text-transform: uppercase; }
-        .dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; }
-        .dot.ek { background-color: #ff4444; } .dot.rp { background-color: #ffff44; } .dot.ms { background-color: #ff44ff; } .dot.ed { background-color: #44ffff; }
-        .filter-group { display: flex; justify-content: center; gap: 6px; margin-bottom: 15px; flex-wrap: wrap; }
-        .filter-btn { background: #333; color: #ccc; border: 1px solid #444; padding: 8px 10px; font-size: 10px; cursor: pointer; text-transform: uppercase; font-weight: bold; }
-        .filter-btn.active { background: #5A4A33; color: #fff; border-color: #DAA520; }
-        .request-section { background-color: #1a1a1a; border: 1px solid #3c3c3c; padding: 15px; text-align: center; margin-bottom: 20px; }
-        .btn-solicitar { background: linear-gradient(to bottom, #7a0000, #4a0000); color: #f0e2c1; padding: 10px 15px; text-decoration: none; border: 1px solid #DAA520; font-weight: bold; font-size: 11px; display: inline-block; text-transform: uppercase; }
-        input#search { width: 100%; padding: 12px; background-color: #0c0c0c; border: 1px solid #5A4A33; color: #FFF; margin-bottom: 15px; outline: none; }
-        .table-wrapper { width: 100%; }
-        table { width: 100%; border-collapse: collapse; background-color: #383838; }
-        th { background-color: #4A4A4A; color: #DAA520; padding: 12px; text-align: left; border: 1px solid #262626; font-size: 11px; text-transform: uppercase; }
-        td { padding: 10px; border: 1px solid #262626; font-size: 13px; }
-        tr:nth-child(even) { background-color: #313131; }
-        .ek { color: #ff4444 !important; } .rp { color: #ffff44 !important; } .ms { color: #ff44ff !important; } .ed { color: #44ffff !important; }
-        .status-badge { padding: 4px 8px; border-radius: 2px; font-weight: bold; font-size: 10px; text-transform: uppercase; }
-        .status-hunted { background-color: #610000; color: #ffb3b3; }
-        .status-pago { background-color: #004400; color: #b3ffb3; }
-        .nick-display { font-weight: bold; display: flex; align-items: center; gap: 8px; }
-        .lvl-cell { font-family: monospace; font-weight: bold; color: #DAA520; }
-        .copy-btn { cursor: pointer; background: #444; color: #fff; border: 1px solid #555; padding: 4px 6px; font-size: 9px; border-radius: 3px; text-transform: uppercase; }
+        body { background-color: #060606; color: #D1C4A8; font-family: Verdana, sans-serif; margin: 0; padding: 10px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         
-        /* Ajuste de carregamento */
-        #loading { text-align: center; padding: 20px; color: #DAA520; font-weight: bold; }
+        /* LOGIN */
+        #login-container { display: flex; align-items: center; justify-content: center; flex: 1; width: 100%; }
+        .login-box { background: #1a1a1a; padding: 30px; border: 2px solid #5A4A33; border-radius: 4px; width: 100%; max-width: 400px; text-align: center; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .input-wrapper { position: relative; width: 100%; margin-bottom: 15px; }
+        input[type="password"], input[type="text"] { width: 100%; padding: 12px; background: #0c0c0c; border: 1px solid #5A4A33; color: #fff; text-align: center; outline: none; font-size: 16px; }
+        .toggle-btn { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #DAA520; cursor: pointer; font-size: 10px; font-weight: bold; }
+        .btn-entrar { width: 100%; background: linear-gradient(to bottom, #7a0000, #4a0000); color: #f0e2c1; padding: 12px; border: 1px solid #DAA520; font-weight: bold; cursor: pointer; text-transform: uppercase; }
 
-        @media (max-width: 768px) {
-            table, thead, tbody, th, td, tr { display: block; width: 100%; }
-            thead { display: none; }
-            tr { margin-bottom: 15px; border: 1px solid #5A4A33; background-color: #1a1a1a !important; border-radius: 4px; }
-            td { text-align: right; padding: 10px; border: none; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center; }
-            td::before { content: attr(data-label); font-weight: bold; color: #DAA520; text-transform: uppercase; font-size: 10px; }
-        }
+        /* CONTAINER PRINCIPAL */
+        .container { width: 100%; max-width: 1000px; background-color: #1a1a1a; border: 2px solid #3c3c3c; padding: 20px; display: none; margin-top: 10px; }
+        h1 { color: #F0E2C1; text-align: center; font-size: 1.8rem; text-transform: uppercase; margin-bottom: 20px; }
+
+        /* PAINEL DE ATIVOS / PAGOS */
+        .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .stat-box { background: #262626; border: 1px solid #3c3c3c; padding: 15px; text-align: center; }
+        .stat-num { display: block; font-size: 32px; color: #DAA520; font-weight: bold; }
+        .stat-txt { font-size: 12px; color: #888; text-transform: uppercase; font-weight: bold; }
+
+        /* LEGENDA DE CORES */
+        .legend { text-align: center; margin-bottom: 15px; font-size: 12px; font-weight: bold; }
+        .dot { height: 10px; width: 10px; border-radius: 50%; display: inline-block; margin-right: 5px; margin-left: 10px; }
+        .dot-ek { background-color: #ff4444; } .dot-rp { background-color: #ffff44; }
+        .dot-ms { background-color: #ff44ff; } .dot-ed { background-color: #44ffff; }
+
+        /* BOTÃO REPORTAR */
+        .btn-report { display: block; width: fit-content; margin: 0 auto 20px; background: linear-gradient(to bottom, #7a0000, #4a0000); color: #fff; border: 1px solid #DAA520; padding: 10px 20px; font-weight: bold; text-decoration: none; font-size: 13px; }
+
+        /* FILTROS */
+        .filter-bar { display: flex; justify-content: center; gap: 5px; margin-bottom: 15px; }
+        .f-btn { background: #333; border: 1px solid #5A4A33; color: #D1C4A8; padding: 8px 15px; cursor: pointer; font-size: 12px; font-weight: bold; text-transform: uppercase; }
+        .f-btn.active { background: #5A4A33; color: #fff; border-color: #DAA520; }
+        .search-box { width: 100%; padding: 12px; background: #0c0c0c; border: 1px solid #3c3c3c; color: #fff; margin-bottom: 20px; outline: none; }
+
+        /* TABELA */
+        table { width: 100%; border-collapse: collapse; background: #262626; }
+        th { background: #333; color: #DAA520; padding: 12px; text-align: left; font-size: 11px; border: 1px solid #1a1a1a; text-transform: uppercase; }
+        td { padding: 10px; border: 1px solid #1a1a1a; font-size: 13px; color: #D1C4A8; }
+        
+        /* CORES VOCAÇÃO */
+        .ek { color: #ff4444 !important; font-weight: bold; }
+        .rp { color: #ffff44 !important; font-weight: bold; }
+        .ms { color: #ff44ff !important; font-weight: bold; }
+        .ed { color: #44ffff !important; font-weight: bold; }
+        .pago-row { opacity: 0.6; }
+
+        #msg-erro { color: #ff4444; font-size: 13px; margin-top: 15px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="container">
+    <div id="login-container">
+        <div class="login-box">
+            <h2 style="color: #DAA520; margin-top:0;">🔒 TITAN HUNTED</h2>
+            <div class="input-wrapper">
+                <input type="password" id="passInput" placeholder="Senha da Guild">
+                <button type="button" class="toggle-btn" onclick="togglePass()">VER</button>
+            </div>
+            <button class="btn-entrar" id="btnAcao" onclick="iniciarValidacao()">ENTRAR</button>
+            <p id="msg-erro"></p>
+        </div>
+    </div>
+
+    <div class="container" id="main-content">
         <h1>TITAN HUNTED LIST</h1>
 
-        <div class="stats-panel">
-            <div class="stat-card">
-                <span class="stat-value" id="countHunted">0</span>
-                <span class="stat-label">Ativos</span>
-            </div>
-            <div class="stat-card">
-                <span class="stat-value" id="countPago">0</span>
-                <span class="stat-label">Pagos</span>
-            </div>
+        <div class="stats-container">
+            <div class="stat-box"><span class="stat-num" id="countAtivos">0</span><span class="stat-txt">Ativos</span></div>
+            <div class="stat-box"><span class="stat-num" id="countPagos">0</span><span class="stat-txt">Pagos</span></div>
         </div>
 
-        <div class="legend-container">
-            <div class="legend-item"><span class="dot ek"></span> EK</div>
-            <div class="legend-item"><span class="dot rp"></span> RP</div>
-            <div class="legend-item"><span class="dot ms"></span> MS</div>
-            <div class="legend-item"><span class="dot ed"></span> ED</div>
+        <div class="legend">
+            <span class="dot dot-ek"></span> EK <span class="dot dot-rp"></span> RP <span class="dot dot-ms"></span> MS <span class="dot dot-ed"></span> ED
         </div>
 
-        <div class="request-section">
-            <a href="https://forms.gle/RPpAQpWfJ91hDvZ97" target="_blank" class="btn-solicitar">⚔️ Reportar Infrator</a>
+        <a href="https://forms.gle/K7CXoeBg5FdEyyPc7" class="btn-report">⚔️ REPORTAR INFRATOR</a>
+
+        <div class="filter-bar">
+            <button class="f-btn active" onclick="filtrar('TODOS', this)">TODOS</button>
+            <button class="f-btn" onclick="filtrar('EK', this)">EK</button>
+            <button class="f-btn" onclick="filtrar('RP', this)">RP</button>
+            <button class="f-btn" onclick="filtrar('MS', this)">MS</button>
+            <button class="f-btn" onclick="filtrar('ED', this)">ED</button>
+            <button class="f-btn" onclick="filtrar('PAGOS', this)">PAGOS</button>
         </div>
 
-        <div class="filter-group">
-            <button class="filter-btn active" onclick="filterBy('', event)">Todos</button>
-            <button class="filter-btn" onclick="filterBy('ek', event)">EK</button>
-            <button class="filter-btn" onclick="filterBy('rp', event)">RP</button>
-            <button class="filter-btn" onclick="filterBy('ms', event)">MS</button>
-            <button class="filter-btn" onclick="filterBy('ed', event)">ED</button>
-            <button class="filter-btn" onclick="filterBy('pago', event)">Pagos</button>
-        </div>
+        <input type="text" id="searchInput" class="search-box" placeholder="Buscar por Nick ou Motivo..." oninput="renderizarTabela()">
 
-        <input type="text" id="search" placeholder="Buscar por Nick ou Motivo...">
-
-        <div class="table-wrapper">
-            <div id="loading">Carregando lista de alvos...</div>
+        <div style="overflow-x:auto;">
             <table>
                 <thead>
                     <tr>
-                        <th>Nick</th>
-                        <th>Voc</th>
-                        <th>Lvl</th>
-                        <th>Motivo</th>
-                        <th>Início</th>
-                        <th>Prazo</th>
-                        <th>Status</th>
+                        <th>NICK</th><th>VOC</th><th>LVL</th><th>MOTIVO</th><th>INÍCIO</th><th>PRAZO</th><th>STATUS</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody"></tbody>
+                <tbody id="tableBody">
+                    <tr><td colspan="7" style="text-align:center;">Carregando lista de alvos...</td></tr>
+                </tbody>
             </table>
         </div>
     </div>
 
     <script>
-        const API_URL = "https://script.google.com/macros/s/AKfycbxtzLx9Vdk23ZjIWM0ASbK5C1k78KcbOOuUxCNVb80EmtXSZPWCG1rSUsxQ3s_YYLlXGQ/exec";
+        const SHEET_ID = '1VX9BprC5Yn-5RI9Z-VCAJ2acIlZRrYLNAZ3v7LYYoB0';
+        let dadosOriginais = [];
+        let filtroVoc = 'TODOS';
+        let senhaDigitada = "";
 
-        let huntedPlayers = [];
-        let currentFilter = '';
+        function togglePass() {
+            const input = document.getElementById('passInput');
+            const btn = document.querySelector('.toggle-btn');
+            input.type = input.type === "password" ? "text" : "password";
+            btn.innerText = input.type === "password" ? "VER" : "OCULTAR";
+        }
 
-        // FUNÇÃO ADICIONADA: Formata a data ISO para o padrão brasileiro DD/MM/AAAA
-        function formatarData(dataString) {
-            if (!dataString) return "";
-            try {
-                const data = new Date(dataString);
-                // Verifica se é uma data válida
-                if (isNaN(data.getTime())) return dataString; 
-                
-                // Formata como DD/MM/YYYY. Usamos UTC para evitar que o fuso horário mude o dia (ex: 28 vira 27)
-                const dia = String(data.getUTCDate()).padStart(2, '0');
-                const mes = String(data.getUTCMonth() + 1).padStart(2, '0');
-                const ano = data.getUTCFullYear();
-                return `${dia}/${mes}/${ano}`;
-            } catch (e) {
-                return dataString;
+        function googleQueryResponse(response) {
+            const msg = document.getElementById('msg-erro');
+            const isConfig = response.table.cols.length < 5; 
+
+            if (isConfig) {
+                const senhaPlanilha = response.table.rows[0].c[0].v.toString().trim();
+                if (senhaDigitada === senhaPlanilha) {
+                    carregarDadosPrincipais();
+                } else {
+                    msg.innerText = "Senha incorreta ou expirada.";
+                    document.getElementById('btnAcao').disabled = false;
+                }
+            } else {
+                dadosOriginais = response.table.rows;
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                renderizarTabela();
             }
         }
 
-        function copiarNick(nick) {
-            navigator.clipboard.writeText(nick).then(() => alert("Copiado: " + nick));
+        function iniciarValidacao() {
+            senhaDigitada = document.getElementById('passInput').value.trim();
+            if(!senhaDigitada) return;
+            document.getElementById('btnAcao').disabled = true;
+            document.getElementById('msg-erro').innerText = "Autenticando...";
+            const script = document.createElement('script');
+            script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:googleQueryResponse&sheet=Config&t=${Date.now()}`;
+            document.body.appendChild(script);
         }
 
-        async function fetchListData() {
-            try {
-                const response = await fetch(API_URL);
-                huntedPlayers = await response.json();
-                document.getElementById('loading').style.display = 'none';
-                renderTable();
-            } catch (error) {
-                document.getElementById('loading').innerText = "Erro ao carregar dados da planilha.";
-                console.error(error);
-            }
+        function carregarDadosPrincipais() {
+            const script = document.createElement('script');
+            script.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=responseHandler:googleQueryResponse&sheet=Página1&t=${Date.now()}`;
+            document.body.appendChild(script);
         }
 
-        function renderTable() {
+        function filtrar(tipo, btn) {
+            filtroVoc = tipo;
+            document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderizarTabela();
+        }
+
+        function renderizarTabela() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
             const tbody = document.getElementById('tableBody');
-            const searchTxt = document.getElementById('search').value.toLowerCase();
-            
-            const filteredData = huntedPlayers.filter(p => {
-                const matchesSearch = String(p.nick).toLowerCase().includes(searchTxt) || String(p.motivo).toLowerCase().includes(searchTxt);
-                if (!currentFilter) return matchesSearch;
-                if (currentFilter === 'pago') return String(p.status).toLowerCase() === 'pago' && matchesSearch;
-                return String(p.voc).toLowerCase() === currentFilter && matchesSearch;
-            });
+            let ativos = 0, pagos = 0;
 
-            tbody.innerHTML = filteredData.map(p => {
-                const isPago = String(p.status).toLowerCase() === 'pago';
-                const vocClass = String(p.voc).toLowerCase();
-                // APLICAÇÃO DA FORMATAÇÃO AQUI NA VARIÁVEL p.data
-                const dataExibicao = formatarData(p.data);
+            const html = dadosOriginais.map(row => {
+                const nick = row.c[0]?.v || "";
+                const voc = (row.c[1]?.v || "").toUpperCase().trim();
+                const lvl = row.c[2]?.v || "";
+                const motivo = row.c[3]?.v || "";
+                const inicio = row.c[4]?.f || row.c[4]?.v || "";
+                const prazo = row.c[5]?.v || "";
+                const status = (row.c[6]?.v || "HUNTED").toUpperCase();
+                
+                const isPago = status === 'PAGO';
+                isPago ? pagos++ : ativos++;
 
-                return `
-                <tr>
-                    <td data-label="Nick" class="nick-display ${vocClass}">
-                        ${p.nick} <button class="copy-btn" onclick="copiarNick('${p.nick}')">Copiar</button>
-                    </td>
-                    <td data-label="Voc" class="${vocClass}" style="font-weight: bold;">${String(p.voc).toUpperCase()}</td>
-                    <td data-label="Lvl" class="lvl-cell">${p.level}</td>
-                    <td data-label="Motivo">${p.motivo}</td>
-                    <td data-label="Início">${dataExibicao}</td>
-                    <td data-label="Prazo">${p.prazo}</td>
-                    <td data-label="Status">
-                        <span class="status-badge ${isPago ? 'status-pago' : 'status-hunted'}">${p.status}</span>
-                    </td>
-                </tr>
-            `}).join('');
+                // Lógica de Filtro
+                const matchesSearch = nick.toLowerCase().includes(search) || motivo.toLowerCase().includes(search);
+                let matchesVoc = true;
+                if(filtroVoc === 'PAGOS') matchesVoc = isPago;
+                else if(filtroVoc !== 'TODOS') matchesVoc = voc === filtroVoc && !isPago;
+                else if(filtroVoc === 'TODOS' && isPago) return ""; // Na aba TODOS não mostra pagos (igual a imagem)
 
-            document.getElementById('countHunted').innerText = huntedPlayers.filter(p => String(p.status).toLowerCase() === 'hunted').length;
-            document.getElementById('countPago').innerText = huntedPlayers.filter(p => String(p.status).toLowerCase() === 'pago').length;
+                if(!matchesSearch || !matchesVoc) return "";
+
+                return `<tr class="${isPago ? 'pago-row' : ''}">
+                    <td class="${voc.toLowerCase()}">${nick}</td>
+                    <td class="${voc.toLowerCase()}">${voc}</td>
+                    <td>${lvl}</td>
+                    <td>${motivo}</td>
+                    <td>${inicio}</td>
+                    <td>${prazo}</td>
+                    <td style="color:${isPago?'#b3ffb3':'#ffb3b3'}">${status}</td>
+                </tr>`;
+            }).join('');
+
+            document.getElementById('countAtivos').innerText = ativos;
+            document.getElementById('countPagos').innerText = pagos;
+            tbody.innerHTML = html || '<tr><td colspan="7" style="text-align:center;">Nenhum resultado encontrado.</td></tr>';
         }
-
-        function filterBy(voc, event) {
-            currentFilter = voc;
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            if (event) event.currentTarget.classList.add('active');
-            renderTable();
-        }
-
-        document.getElementById('search').addEventListener('input', renderTable);
-        
-        fetchListData();
     </script>
 </body>
 </html>
